@@ -1,0 +1,6 @@
+[mysqld]
+bind-address=0.0.0.0
+server-id=2  
+relay-log=relay-log-bin    # Enables binary logging for replication.
+
+
