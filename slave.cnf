@@ -1,7 +1,7 @@
 [mysqld]
-bind-address=0.0.0.0   # Allows MySQL to listen on all available network interfaces.
-server-id=2            # Unique ID for this MySQL server in the replication setup.
+bind-address=0.0.0.0     # Allows MySQL to listen on all available network interfaces.
+server-id=2              # Unique ID for this MySQL server in the replication setup.
 relay-log=relay-log-bin  # Enables binary logging for replication on the slave.
 
-read-only=1            # Ensures the slave is read-only, preventing write operations.
-super-read-only=1      # Ensures the slave is read-only even for users with SUPER privilege.
+read-only=1         # Ensures the slave is read-only, preventing write operations.
+
