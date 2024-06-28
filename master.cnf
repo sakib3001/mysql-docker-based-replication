@@ -1,4 +1,9 @@
 [mysqld]
-bind-address = 0.0.0.0  # Allow MySQL to listen on all available network interfaces.
-server-id = 1  # Unique ID for this MySQL server participating in replication.
-log-bin = mysql-bin  # Enables binary logging for replication.
+# Allow MySQL to listen on all available network interfaces.
+bind-address = 0.0.0.0  
+
+# Unique ID for this MySQL server participating in replication.
+server-id = 1  
+
+# Enables binary logging for replication.
+log-bin = mysql-bin  

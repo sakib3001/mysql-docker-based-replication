@@ -6,3 +6,4 @@ FLUSH PRIVILEGES;
 -- Alter the user to use mysql_native_password
 ALTER USER 'replicator'@'%' IDENTIFIED WITH mysql_native_password BY 'replica_password';
 FLUSH PRIVILEGES;
+

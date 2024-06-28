@@ -7,20 +7,19 @@ services:
       dockerfile: Dockerfile
       target: master
     environment:
-      # MySQL Master environment variables
       MYSQL_ROOT_PASSWORD: ${MASTER_MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MASTER_MYSQL_DATABASE}
       MYSQL_USER: ${MASTER_MYSQL_USER}
       MYSQL_PASSWORD: ${MASTER_MYSQL_PASSWORD}
       MYSQL_ALLOW_EMPTY_PASSWORD: ${MASTER_MYSQL_ALLOW_EMPTY_PASSWORD}
     hostname: master-db
     container_name: master-db
     ports:
-      - "3300:3306"  # Map host port 3300 to container port 3306
+      - "3300:3306"
     networks:
       - replica-net
+    # Uncomment the following line if you want to persist data
     # volumes:
-    #   - ./master/data:/var/lib/mysql  # Mount volume for persistent data if required
+    #   - ./master/data:/var/lib/mysql
 
   read-replica:
     build:
@@ -28,22 +27,22 @@ services:
       dockerfile: Dockerfile
       target: slave
     environment:
-      # MySQL Read Replica environment variables
       MYSQL_ROOT_PASSWORD: ${SLAVE_MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${SLAVE_MYSQL_DATABASE}
       MYSQL_USER: ${SLAVE_MYSQL_USER}
       MYSQL_PASSWORD: ${SLAVE_MYSQL_PASSWORD}
       MYSQL_ALLOW_EMPTY_PASSWORD: ${SLAVE_MYSQL_ALLOW_EMPTY_PASSWORD}
     hostname: read-replica
     container_name: read-replica
     ports:
-      - "3301:3306"  # Map host port 3301 to container port 3306
+      - "3301:3306"
     networks:
       - replica-net
+    depends_on:
+      - master-db
+    # Uncomment the following line if you want to persist data
     # volumes:
-    #   - ./read-replica/data:/var/lib/mysql  # Mount volume for persistent data if required
-
+    #   - ./read-replica/data:/var/lib/mysql
 
 networks:
   replica-net:
-    name: replica-net  # Define a custom network for communication between services
+    name: replica-net
