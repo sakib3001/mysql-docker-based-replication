@@ -82,7 +82,6 @@ read-only=1                # Sets the MySQL server to read-only mode.
 - ***Access master-db Container***
 ```
   docker exec -it master-db bash
-
 ```
 This command opens an interactive terminal (bash) within the master-db Docker container.
 
@@ -102,7 +101,6 @@ CREATE TABLE test_table (
 );
 INSERT INTO test_table (message) VALUES ('Hello, World!');
 INSERT INTO test_table (message) VALUES ('Replication Test');
-
 ```
 Commands like `CREATE DATABASE`, `CREATE TABLE`, and `INSERT INTO` are SQL statements executed within the MySQL client to create a database, define a table schema, and insert data, respectively.
 
@@ -110,7 +108,6 @@ Commands like `CREATE DATABASE`, `CREATE TABLE`, and `INSERT INTO` are SQL state
 ```
 SHOW DATABASES;
 SELECT * FROM test_table;
-
 ```
 Retrieves and displays all the databases and rows from `test_table` to confirm the data insertion.
 
@@ -119,7 +116,6 @@ Retrieves and displays all the databases and rows from `test_table` to confirm t
 - ***Access read-replica Container***
 ```
   docker exec -it read-replica bash
-
 ```
 This command opens an interactive terminal (bash) within the read-replica Docker container.
 
@@ -131,14 +127,42 @@ mysql -u <username> -p
 Replace `<username>` with your MySQL username. You'll be prompted to enter the `password`.
 
 
+- ***Create User and Grant Permissions for Replication***
+```
+CREATE USER 'test-user'@'localhost' IDENTIFIED BY '123';
+GRANT SELECT, INSERT ON test_db.* TO 'test-user'@'localhost';
+FLUSH PRIVILEGES;
+```
+Creates a MySQL user `test-user` with password `123` that can connect from localhost and grants `SELECT` and `INSERT` privileges on `test_db` to `test-user`.
+
+- ***Re-login with the `test-user`and Verify the Replication***
+```
+mysql -u test-user -p
+
+```
+##### Check Databases of `read-replica`
+```
+SHOW DATABASES;
+```
+Lists all databases to verify `test_db` exists on the slave. If exists, then check the tables and contents of the `test_table` to confirm proper replication.
+```
+USE test_db;
+SHOW TABLES;
+SELECT * FROM test_table;
+```
+Retrieves and displays all rows from `test_table` on the slave to confirm replication.
 
 
+- ***Testing `Read-Only` Mode***
+```
+USE test_db;
+INSERT INTO test_table (message) VALUES ('Should Fail');
+
+```
+This must fail because the slave is configured as `read-only`.
 
 
-
-
-
-## Stop The DB Cluster
+## Destroy The DB Cluster
  
 #### Stop All the containers in the docker-compose.yml
 ```bash
@@ -149,25 +173,4 @@ Replace `<username>` with your MySQL username. You'll be prompted to enter the `
   docker compose down
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Remarks
-
-- Healthchecks for the `db` and the `redis` is not added to the compose file.
-- The Image size are reduced to `frontend = 877MB` and the `backend =  337MB`
-- In some cases, volume binding is crucial for data persistence. Here, I had used the `./pgdata` directory for data persistence. Alternatively, Docker volumes could be used, but for replication purposes, I prefer `volume binding`. For the ease of the project structure here I am using `pgdata` docker volume right now.
 
