@@ -89,7 +89,7 @@ This command opens an interactive terminal (bash) within the master-db Docker co
 ```
 mysql -u <username> -p
 ```
-Replace `<username>` with your MySQL username. You'll be prompted to enter the `password`.
+Replace `<username>` with `root`. You'll be prompted to enter the `password` and then press `enter`.
 
 - ***Create Database and Table then Insert Data***
 ```
@@ -124,7 +124,7 @@ This command opens an interactive terminal (bash) within the read-replica Docker
 ```
 mysql -u <username> -p
 ```
-Replace `<username>` with your MySQL username. You'll be prompted to enter the `password`.
+Replace `<username>` with `root`. You'll be prompted to enter the `password` and then press `enter`.
 
 
 - ***Create User and Grant Permissions for Replication***
@@ -137,6 +137,7 @@ Creates a MySQL user `test-user` with password `123` that can connect from local
 
 - ***Re-login with the `test-user`and Verify the Replication***
 ```
+exit
 mysql -u test-user -p
 
 ```
